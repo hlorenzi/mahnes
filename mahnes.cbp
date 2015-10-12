@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="MahNES" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Win32_Debug">
+				<Option output="bin/win32_debug/mahnes" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/win32_debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-march=core2" />
+					<Add option="-pedantic" />
+					<Add option="-Wextra" />
+					<Add option="-Wall" />
+					<Add option="-std=c++11" />
+					<Add option="-g" />
+					<Add option="-fno-rtti" />
+					<Add option="-fno-exceptions" />
+					<Add option="-fstrict-aliasing" />
+					<Add option="-DMAHNES_DEBUG" />
+				</Compiler>
+				<Linker>
+					<Add option="-static-libgcc" />
+					<Add option="-static-libstdc++" />
+				</Linker>
+			</Target>
+			<Target title="Win32_Release">
+				<Option output="bin/win32_release/mahnes" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/win32_release/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-march=core2" />
+					<Add option="-fomit-frame-pointer" />
+					<Add option="-fexpensive-optimizations" />
+					<Add option="-O3" />
+					<Add option="-pedantic" />
+					<Add option="-Wextra" />
+					<Add option="-Wall" />
+					<Add option="-std=c++11" />
+					<Add option="-fno-rtti" />
+					<Add option="-fno-exceptions" />
+					<Add option="-fstrict-aliasing" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-static-libgcc" />
+					<Add option="-static-libstdc++" />
+				</Linker>
+			</Target>
+		</Build>
+		<Linker>
+			<Add library="opengl32" />
+			<Add library="glu32" />
+			<Add library="gdi32" />
+			<Add library="winmm" />
+		</Linker>
+		<Unit filename="src/emul/blip_buf.cpp" />
+		<Unit filename="src/emul/blip_buf.h" />
+		<Unit filename="src/emul/emul.cpp" />
+		<Unit filename="src/emul/emul.h" />
+		<Unit filename="src/emul/emul_apu.cpp" />
+		<Unit filename="src/emul/emul_apu.h" />
+		<Unit filename="src/emul/emul_cartridge.h" />
+		<Unit filename="src/emul/emul_cartridge_axrom.h" />
+		<Unit filename="src/emul/emul_cartridge_nrom.h" />
+		<Unit filename="src/emul/emul_cartridge_uxrom.h" />
+		<Unit filename="src/emul/emul_cpu.cpp" />
+		<Unit filename="src/emul/emul_cpu.h" />
+		<Unit filename="src/emul/emul_disasm.h" />
+		<Unit filename="src/emul/emul_ppu.cpp" />
+		<Unit filename="src/emul/emul_ppu.h" />
+		<Unit filename="src/emul/emul_rom.cpp" />
+		<Unit filename="src/emul/emul_rom.h" />
+		<Unit filename="src/emul/emul_types.h" />
+		<Unit filename="src/gui/win/gui_win_main.cpp" />
+		<Unit filename="src/gui/win/gui_win_main.h" />
+		<Unit filename="src/gui/win/gui_win_sound.cpp" />
+		<Unit filename="src/gui/win/gui_win_sound.h" />
+		<Unit filename="src/main.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

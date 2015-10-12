@@ -1,0 +1,19 @@
+#ifndef GUI_WIN_SOUND_H
+#define GUI_WIN_SOUND_H
+
+#include <sdl/sdl.h>
+#include <sdl/sdl_audio.h>
+
+namespace MahNES
+{
+	class GUISound
+	{
+	public:
+		int Init();
+		void OutputCallback(void* ptr, Uint8* stream, int len);
+
+
+	};
+}
+
+#endif
