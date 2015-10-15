@@ -1,4 +1,5 @@
 #include "gui_win_sound.h"
+#include <stdio.h>
 
 namespace MahNES
 {
@@ -16,7 +17,7 @@ namespace MahNES
         currentWriteIndex = 0;
         currentPlayBuffer = 0;
 
-		playbackThread = new std::thread(DeviceInitFunc, this);
+		playbackThread = CreateThread(NULL, 0, DeviceInitFunc, this, 0, &playbackThreadId);
 		return 0;
 	}
 
@@ -30,7 +31,7 @@ namespace MahNES
 		enabled = false;
 	}
 
-	void GUISound::DeviceInitFunc(void* ptr)
+	long unsigned int __attribute__((__stdcall__)) GUISound::DeviceInitFunc(void* ptr)
 	{
 	    GUISound* obj = (GUISound*)ptr;
 
@@ -53,6 +54,8 @@ namespace MahNES
 
         while (true)
             Sleep(1000);
+
+        return 0;
 	}
 
     void CALLBACK GUISound::DeviceWaveOutFunc(HWAVEOUT hwo, UINT uMsg, DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2)

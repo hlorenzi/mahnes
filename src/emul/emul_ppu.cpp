@@ -188,7 +188,7 @@ namespace MahNES
 
 	void EmulatorPPU::ExecuteFrame()
 	{
-		printf("cycles: %d\n", cycles);
+		//printf("cycles: %d\n", cycles);
 		cycles = 0;
 
 		/* 0 - 239 : Visible Frame ======================================= */

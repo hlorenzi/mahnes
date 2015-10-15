@@ -230,7 +230,7 @@ namespace MahNES
 			int executionTime;
 			QueryPerformanceCounter(&nEndTime);
 			executionTime = (nEndTime.QuadPart - nBeginTime.QuadPart) * 1000 / nFreq.QuadPart;
-			if (executionTime < 1000 / 60) Sleep((1000 / 60) - executionTime);
+			if (executionTime < 1000 / 70) Sleep((1000 / 70) - executionTime);
 		}
 		return 0;
 	}

@@ -2,7 +2,6 @@
 #define GUI_WIN_SOUND_H
 
 #include <windows.h>
-#include <thread>
 
 typedef unsigned char Uint8;
 
@@ -15,7 +14,7 @@ namespace MahNES
 		void Enable();
 		void Disable();
 
-        static void DeviceInitFunc(void* ptr);
+        static long unsigned int __attribute__((__stdcall__)) DeviceInitFunc(void* ptr);
         static void CALLBACK DeviceWaveOutFunc(HWAVEOUT hwo, UINT uMsg, DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2);
 
         void AdvanceBuffer();
@@ -24,7 +23,8 @@ namespace MahNES
 	public:
 		bool enabled;
 
-		std::thread* playbackThread;
+		HANDLE playbackThread;
+		DWORD playbackThreadId;
         HWAVEOUT outHandle;
         bool ready;
 

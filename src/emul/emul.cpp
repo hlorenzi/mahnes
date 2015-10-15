@@ -1,6 +1,7 @@
 #include "emul.h"
 #include "emul_rom.h"
 #include "emul_cartridge_nrom.h"
+#include "emul_cartridge_mmc1.h"
 #include "emul_cartridge_uxrom.h"
 #include "emul_cartridge_axrom.h"
 #include <stdio.h>
@@ -32,7 +33,7 @@ namespace MahNES
 		}
 		else if (addr == 0x4017)
 			return 0;
-		else if (addr >= 0x8000) return cartridgeRead;
+		else if (addr >= 0x6000) return cartridgeRead;
 		else
 			return 0;
 	}
@@ -179,6 +180,10 @@ namespace MahNES
 		cpu.Reset();
 		ppu.Reset();
 		apu.Reset();
+
+		memset(ram, 0, 0x800);
+		memset(vram, 0, 0x800);
+		memset(paletteram, 0, 0x20);
 	}
 
 	void Emulator::ExecuteFrame()
@@ -193,7 +198,8 @@ namespace MahNES
 
 		if (res == 0)
 		{
-			if (rom.mapperID == 0x2) cartridge = new EmulatorCartridgeUxROM;
+			if (rom.mapperID == 0x1) cartridge = new EmulatorCartridgeMMC1;
+			else if (rom.mapperID == 0x2) cartridge = new EmulatorCartridgeUxROM;
 			else if (rom.mapperID == 0x7) cartridge = new EmulatorCartridgeAxROM;
             else cartridge = new EmulatorCartridgeNROM;
 

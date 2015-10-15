@@ -330,7 +330,7 @@ namespace MahNES
 		int noisesilence = (!(reg_noise_control & 0x10) && noise_silence_envelope) || (!(reg_noise_control & 0x20) && reg_noise_length <= 0);
 
 		if (!sqr1silence  && (reg_control & 0x1)) { // SQR1 ENABLE
-			int sqr1_duty;
+			int sqr1_duty = 1;
 			switch((reg_sqr1_control & 0xC0) >> 6) {
 				case 0x0:   // 12.5% Duty Cycle
 				case 0x3: { // 12.5% Duty Cycle Negated
@@ -355,7 +355,7 @@ namespace MahNES
 		}
 
 		if (!sqr2silence  && (reg_control & 0x2)) { // SQR2 ENABLE
-			int sqr2_duty;
+			int sqr2_duty = 1;
 			switch((reg_sqr2_control & 0xC0) >> 6) {
 				case 0x0:   // 12.5% Duty Cycle
 				case 0x3: { // 12.5% Duty Cycle Negated
