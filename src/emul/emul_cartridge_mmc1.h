@@ -46,11 +46,8 @@ namespace MahNES
 			else ppuReadFunction = PPUReadCHRROM;
 
 			ppuWriteFunction = PPUWrite;
-
 			ppuCIRAMEnableFunction = PPUCIRAMEnable;
-
-			if (rom->mirroring) ppuCIRAMMirrorFunction = PPUCIRAMMirrorHorizontal;
-			else ppuCIRAMMirrorFunction = PPUCIRAMMirrorVertical;
+			ppuCIRAMMirrorFunction = PPUCIRAMMirror;
 
             SetBankAddresses();
 
@@ -74,6 +71,18 @@ namespace MahNES
             {
                 prgLowAddr = (prgReg & 0xe) * 0x4000;
                 prgHighAddr = prgLowAddr + 0x4000;
+            }
+
+            int chrMode = (controlReg >> 4) & 0x1;
+            if (chrMode == 0)
+            {
+                chrLowAddr = (chr0Reg & 0x1e) * 0x1000;
+                chrHighAddr = chrLowAddr + 0x1000;
+            }
+            else
+            {
+                chrLowAddr = (chr0Reg & 0x1f) * 0x1000;
+                chrHighAddr = (chr1Reg & 0x1f) * 0x1000;
             }
 		}
 
@@ -132,7 +141,12 @@ namespace MahNES
 
 		static int8 PPUReadCHRROM(void* ptr, int16 addr)
 		{
-			return ((EmulatorCartridgeMMC1*)ptr)->chrROM[addr % 0x2000];
+		    EmulatorCartridgeMMC1* mmc1 = (EmulatorCartridgeMMC1*)ptr;
+
+		    if (addr < 0x1000)
+                return mmc1->chrROM[mmc1->chrLowAddr + addr % 0x1000];
+            else
+                return mmc1->chrROM[mmc1->chrHighAddr + addr % 0x1000];
 		}
 
 		static int8 PPUReadCHRRAM(void* ptr, int16 addr)
@@ -153,16 +167,20 @@ namespace MahNES
 			return true;
         }
 
-        static bool PPUCIRAMMirrorVertical(void* ptr, int16 addr)
+        static bool PPUCIRAMMirror(void* ptr, int16 addr)
         {
-            (void)ptr;
-            return (addr & (0x1 << 10)) > 0 ? 1 : 0;
-        }
+		    EmulatorCartridgeMMC1* mmc1 = (EmulatorCartridgeMMC1*)ptr;
 
-        static bool PPUCIRAMMirrorHorizontal(void* ptr, int16 addr)
-        {
-            (void)ptr;
-            return (addr & (0x1 << 11)) > 0 ? 1 : 0;
+            int mirrorMode = (mmc1->controlReg & 0x3);
+
+            if (mirrorMode == 0x0)
+                return 0;
+            else if (mirrorMode == 0x2)
+                return (addr & (0x1 << 10)) > 0 ? 1 : 0;
+            else if (mirrorMode == 0x3)
+                return (addr & (0x1 << 11)) > 0 ? 1 : 0;
+            else
+                return 1;
         }
 	};
 }

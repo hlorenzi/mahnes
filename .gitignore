@@ -1,3 +1,4 @@
 mahnes.depend
 mahnes.layout
 obj/*
+bin/win32_debug/*
