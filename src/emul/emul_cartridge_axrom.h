@@ -43,11 +43,15 @@ namespace MahNES
 
 		static void CPUWrite(void* ptr, int16 addr, int8 value)
 		{
-			((EmulatorCartridgeAxROM*)ptr)->mirroring = (value & 0x10) ? 1 : 0;
+            EmulatorCartridgeAxROM* axrom = ((EmulatorCartridgeAxROM*)ptr);
+			if (addr >= 0x8000)
+            {
+                axrom->mirroring = (value & 0x10) ? 1 : 0;
 
-			if (addr >= 0x8000) ((EmulatorCartridgeAxROM*)ptr)->currentBank = value & 0xf;
-			while (((EmulatorCartridgeAxROM*)ptr)->currentBank >= ((EmulatorCartridgeAxROM*)ptr)->bankNumber)
-				((EmulatorCartridgeAxROM*)ptr)->currentBank >>= 1;
+                axrom->currentBank = value & 0xf;
+                while (axrom->currentBank >= axrom->bankNumber)
+                    axrom->currentBank >>= 1;
+            }
 		}
 
 		static int8 PPUReadCHRRAM(void* ptr, int16 addr)
@@ -70,8 +74,8 @@ namespace MahNES
 
         static bool PPUCIRAMMirror(void* ptr, int16 addr)
         {
-			if (addr & 0x8000) return (addr & (0x1 << 10));
-            else return ((EmulatorCartridgeAxROM*)ptr)->mirroring;
+            EmulatorCartridgeAxROM* axrom = ((EmulatorCartridgeAxROM*)ptr);
+			return axrom->mirroring;
         }
 	};
 }
