@@ -2,6 +2,7 @@
 #include "emul_rom.h"
 #include "emul_cartridge_nrom.h"
 #include "emul_cartridge_mmc1.h"
+#include "emul_cartridge_mmc3.h"
 #include "emul_cartridge_uxrom.h"
 #include "emul_cartridge_axrom.h"
 #include <stdio.h>
@@ -200,6 +201,7 @@ namespace MahNES
 		{
 			if (rom.mapperID == 0x1) cartridge = new EmulatorCartridgeMMC1;
 			else if (rom.mapperID == 0x2) cartridge = new EmulatorCartridgeUxROM;
+			else if (rom.mapperID == 0x4) cartridge = new EmulatorCartridgeMMC3;
 			else if (rom.mapperID == 0x7) cartridge = new EmulatorCartridgeAxROM;
             else cartridge = new EmulatorCartridgeNROM;
 

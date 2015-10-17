@@ -68,6 +68,7 @@
 		<Unit filename="src/emul/emul_cartridge.h" />
 		<Unit filename="src/emul/emul_cartridge_axrom.h" />
 		<Unit filename="src/emul/emul_cartridge_mmc1.h" />
+		<Unit filename="src/emul/emul_cartridge_mmc3.h" />
 		<Unit filename="src/emul/emul_cartridge_nrom.h" />
 		<Unit filename="src/emul/emul_cartridge_uxrom.h" />
 		<Unit filename="src/emul/emul_cpu.cpp" />
