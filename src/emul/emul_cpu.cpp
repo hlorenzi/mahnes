@@ -48,6 +48,7 @@ namespace MahNES
 		registerA = registerX = registerY = 0;
 		registerS = 0xfd;
 		signalNMI = -1;
+		signalIRQ = -1;
 
 		frameCounter = 1;
 		cycleCounter = 0;
@@ -58,6 +59,11 @@ namespace MahNES
 	void EmulatorCPU::NMI(int delayCycles)
 	{
 		signalNMI = delayCycles;
+	}
+
+	void EmulatorCPU::IRQ(int delayCycles)
+	{
+		signalIRQ = delayCycles;
 	}
 
 	void EmulatorCPU::Execute(int cycles)
@@ -182,6 +188,7 @@ namespace MahNES
 
 			opcodeTiming++;
 			if (signalNMI > 0) signalNMI--;
+			if (signalIRQ > 0) signalIRQ--;
 
 		branchPrefetch:
 
@@ -204,6 +211,19 @@ namespace MahNES
 
 						opcodeTiming = 0;
 						registerPC = readFunction(readFunctionObj, 0xfffa) | (readFunction(readFunctionObj, 0xfffb) << 8);
+					}
+					else if (signalIRQ == 0)
+					{
+						signalIRQ = -1;
+						writeFunction(writeFunctionObj, 0x100 + registerS, ((registerPC) >> 8) & 0xff);
+						registerS--;
+						writeFunction(writeFunctionObj, 0x100 + registerS, (registerPC) & 0xff);
+						registerS--;
+						writeFunction(writeFunctionObj, 0x100 + registerS, registerP);
+						registerS--;
+
+						opcodeTiming = 0;
+						registerPC = readFunction(readFunctionObj, 0xfffe) | (readFunction(readFunctionObj, 0xffff) << 8);
 					}
 					else
 						opcode = readFunction(readFunctionObj, registerPC++);

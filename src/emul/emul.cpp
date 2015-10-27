@@ -205,6 +205,8 @@ namespace MahNES
 			else if (rom.mapperID == 0x7) cartridge = new EmulatorCartridgeAxROM;
             else cartridge = new EmulatorCartridgeNROM;
 
+            cartridge->cpu = &cpu;
+            cartridge->ppu = &ppu;
             cartridge->LoadROM(&rom);
 		}
 

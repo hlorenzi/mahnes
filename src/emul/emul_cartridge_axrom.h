@@ -74,6 +74,7 @@ namespace MahNES
 
         static bool PPUCIRAMMirror(void* ptr, int16 addr)
         {
+            (void)addr;
             EmulatorCartridgeAxROM* axrom = ((EmulatorCartridgeAxROM*)ptr);
 			return axrom->mirroring;
         }

@@ -20,6 +20,7 @@ namespace MahNES
 
 		void Reset();
 		void NMI(int delayCycles);
+		void IRQ(int delayCycles);
 		void Execute(int cycles);
 
 	private:
@@ -29,6 +30,7 @@ namespace MahNES
 		void* writeFunctionObj;
 
 		int signalNMI;
+		int signalIRQ;
 
 		int clockDivider;
 		int clocksRemaining;

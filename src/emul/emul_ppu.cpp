@@ -455,7 +455,20 @@ namespace MahNES
 		{
 			int8 spry = oam[(i << 2)];
 
-			if (!(scanline - spry >= 0 && scanline - spry < size)) continue;
+			if (!(scanline - spry >= 0 && scanline - spry < size))
+            {
+                if (size == 16)
+                {
+                    readFunction(readFunctionObj, 0x1000);
+                    readFunction(readFunctionObj, 0x1000);
+                }
+                else
+                {
+                    readFunction(readFunctionObj, patterntable);
+                    readFunction(readFunctionObj, patterntable);
+                }
+                continue;
+            }
 
 			if ((oamslot > 7 && ((registerMASK & 0x18) != 0) && spry < 240))
 			{

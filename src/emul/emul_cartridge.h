@@ -17,6 +17,8 @@ namespace MahNES
 
 		virtual int LoadROM(EmulatorROM* rom) = 0;
 
+		EmulatorCPU* cpu;
+		EmulatorPPU* ppu;
 		void* ptr;
 		CPUReadFunction cpuReadFunction;
 		CPUWriteFunction cpuWriteFunction;

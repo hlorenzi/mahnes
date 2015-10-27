@@ -22,6 +22,13 @@ namespace MahNES
 		int8 bankDataReg[8];
 		bool mirroringReg;
 
+		int8 irqLatchReg;
+		int8 irqCounter;
+		bool irqEnabled;
+		bool irqReload;
+
+		int16 lastPPUAddr;
+
 		int chrAddr[8];
 		int prgAddr[4];
 
@@ -32,6 +39,12 @@ namespace MahNES
 			bankSelectReg = 0;
 			for (int i = 0; i < 8; i++) bankDataReg[i] = 0;
 			mirroringReg = false;
+			irqLatchReg = 0;
+			irqCounter = 0;
+			irqReload = false;
+			irqEnabled = false;
+
+			lastPPUAddr = 0;
 
 			prgROM = rom->prgROM;
 			chrROM = rom->chrROM;
@@ -94,6 +107,36 @@ namespace MahNES
             }
 		}
 
+		void HandleCounter(int16 addr)
+		{
+		    if (addr >= 0x3000)
+                return;
+
+            //if (ppu->frame > 100)
+            //    printf("IRQ update %04x at %d:%d\n", addr, ppu->scanline, ppu->dot);
+
+		    if ((addr & 0x1000) && !(lastPPUAddr & 0x1000))
+            {
+                irqCounter--;
+                //if (ppu->frame > 100)
+                //    printf("IRQ dec %d\n", irqCounter);
+
+                if (irqReload)
+                    irqCounter = irqLatchReg;
+
+                irqReload = false;
+
+                if (irqCounter == 0 && irqEnabled)
+                {
+                    //printf("IRQ at %d:%d\n", ppu->scanline, ppu->dot);
+                    cpu->IRQ(7);
+                    irqCounter = irqLatchReg;
+                }
+            }
+
+            lastPPUAddr = addr;
+		}
+
 		static int8 CPURead(void* ptr, int16 addr)
 		{
 		    EmulatorCartridgeMMC3* mmc3 = (EmulatorCartridgeMMC3*)ptr;
@@ -129,6 +172,20 @@ namespace MahNES
                     if ((addr & 0x1) == 0x0)
                         mmc3->mirroringReg = (value & 0x1);
                 }
+                else if ((addr & 0xe000) == 0xc000)
+                {
+                    if ((addr & 0x1) == 0x0)
+                        mmc3->irqLatchReg = value;
+                    else
+                        mmc3->irqReload = true;
+                }
+                else if ((addr & 0xe000) == 0xe000)
+                {
+                    if ((addr & 0x1) == 0x0)
+                        mmc3->irqEnabled = false;
+                    else
+                        mmc3->irqEnabled = true;
+                }
             }
 		}
 
@@ -136,14 +193,17 @@ namespace MahNES
 		{
 		    EmulatorCartridgeMMC3* mmc3 = (EmulatorCartridgeMMC3*)ptr;
 
+		    mmc3->HandleCounter(addr);
+
 		    return mmc3->chrROM[mmc3->chrAddr[(addr >> 10) & 0x7] + addr % 0x400];
 		}
 
 		static void PPUWrite(void* ptr, int16 addr, int8 value)
 		{
-		    (void)ptr;
-		    (void)addr;
 		    (void)value;
+
+		    EmulatorCartridgeMMC3* mmc3 = (EmulatorCartridgeMMC3*)ptr;
+		    mmc3->HandleCounter(addr);
 		}
 
         static bool PPUCIRAMEnable(void* ptr, int16 addr)
